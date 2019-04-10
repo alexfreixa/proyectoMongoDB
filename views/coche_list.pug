@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  
+  ul
+    each coche in coche_list
+      li 
+        a(href=coche.url) #{coche.modelo} 
+        |  (#{coche.fecha_de_fabricacion_formatted})
+
+    else
+      li No hay coches.

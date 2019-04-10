@@ -20,7 +20,8 @@ ClienteSchema
 ClienteSchema
 .virtual('fecha_nacimiento_formatted')
 .get(function () {
-  return (this.fecha_nacimiento).toString();
+  //return (this.fecha_nacimiento).toString();
+  return this.fecha_nacimiento ? moment(this.fecha_nacimiento).format('YYYY-MM-DD') : 'Sin información';
 });
 
 ClienteSchema

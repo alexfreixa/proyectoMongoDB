@@ -1,0 +1,24 @@
+extends layout
+
+block content
+
+  h1 Coche: #{coche.marca_modelo}
+  if coche.fecha_de_fabricacion==NULL
+     p No hay registro de la fecha de fabricación
+  else
+    p #{coche.fecha_de_fabricacion}
+
+  p [Strong Concesionario:]
+    a(href=coche.concesionario.url) #{coche.concesionario.marca}
+  p [Strong Color:] #{coche.color}
+  p [Strong Precio:] #{coche.precio_venta}
+  p [Strong Cliente:] 
+    a(href=coche.cliente.url) #{coche.cliente}
+  
+
+  div(style='margin-left:20px;margin-top:20px')
+
+  p
+    a(href=coche.url+'/delete') Delete Coche
+  p
+    a(href=book.url+'/update') Update Coche

@@ -11,10 +11,16 @@ if (!userArgs[0].startsWith('mongodb')) {
 }
 */
 var async = require('async')
-var Book = require('./models/book')
+/*var Book = require('./models/book')
 var Author = require('./models/author')
 var Genre = require('./models/genre')
 var BookInstance = require('./models/bookinstance')
+*/
+var Coche = require('./models/coche')
+var Cliente = require('./models/cliente')
+var Concesionario = require('./models/concesionario')
+var Compra = require('./models/compra')
+
 
 var mongoose = require('mongoose');
 var mongoDB = userArgs[0];
@@ -23,10 +29,15 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-var authors = []
+/*var authors = []
 var genres = []
 var books = []
 var bookinstances = []
+*/
+var coches = []
+var clientes = []
+var concesionarios = []
+var compras = []
 
 function authorCreate(first_name, family_name, d_birth, d_death, cb) {
   authordetail = {first_name:first_name , family_name: family_name }

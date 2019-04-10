@@ -1,0 +1,56 @@
+extends layout
+
+block content
+  h1=title
+
+  form(method='POST' action='')
+    div.form-group
+      //- label(for='marca') Marca:
+      //- input#marca.form-control(type='text' placeholder='Introduce la marca' name='marca' required='true' value=(undefined===coche ? '' : coche.marca) )
+
+      label(for='marca') Marca:
+      select#marca.form-control(type='select' placeholder='Selecciona la marca' name='marca' required='true' )
+        for concesionario in concesionarios
+          if coche
+            option(
+              value=concesionario._id
+              selected=(
+                concesionario._id.toString()==coche.marca._id
+                || concesionario._id.toString()==coche.marca
+              ) ? 'selected' : false
+            ) #{concesionario.marca}
+          else
+            option(value=concesionario._id) #{concesionario.marca}
+      
+      label(for='modelo') Modelo:
+      input#modelo.form-control(type='text' placeholder='Introduce el modelo' name='modelo' required='true' value=(undefined===coche ? '' : coche.modelo))
+      
+    div.form-group
+      label(for='fecha_de_fabricacion') Fecha de fabricación:
+      input#fecha_de_fabricacion.form-control(type='date' name='fecha_de_fabricacion' value=(undefined===coche ? '' : coche.fecha_de_fabricacion) )
+      
+      label(for='color') Color:
+      input#color.form-control(type='text' placeholder='Introduce el color' name='color' value=(undefined===coche ? '' : coche.color))
+      
+      label(for='precio_venta') Precio de venta:
+      input#precio_venta.form-control(type='number' placeholder='Introduce el precio' name='precio_venta' value=(undefined===coche ? '' : coche.precio_venta))
+
+      label(for='cliente') Cliente:
+      select#cliente.form-control(type='select' placeholder='Selecciona el cliente' name='cliente' required='true' )
+        for cliente in clietes
+          if coche
+            option(
+              value=cliente._id
+              selected=(
+                cliente._id.toString()==coche.cliente._id
+                || cliente._id.toString()==coche.cliente
+              ) ? 'selected' : false
+            ) #{cliente.nombre}
+          else
+            option(value=cliente._id) #{cliente.nombre}
+    
+    button.btn.btn-primary(type='submit') Submit
+  if errors 
+    ul
+      for error in errors
+        li!= error.msg

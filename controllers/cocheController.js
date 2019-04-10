@@ -13,7 +13,7 @@ exports.index = function(req, res) {
 
     async.parallel({
         coche_count: function(callback) {
-            Book.count(callback);
+            Coche.count(callback);
         },
         concesionario_count: function(callback) {
             Concesionario.count(callback);

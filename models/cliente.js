@@ -12,15 +12,16 @@ var ClienteSchema = new Schema({
 });
 
 ClienteSchema
-.virtual('nombre')
+.virtual('nombre_apellido')
 .get(function () {
   return this.apellidos + ', ' + this.nombre;
 });
 
-AuthorSchema
-.virtual('fecha_nacimiento')
+ClienteSchema
+.virtual('fecha_nacimiento_formatted')
 .get(function () {
-  return (this.fecha_nacimiento).toString();
+  //return (this.fecha_nacimiento).toString();
+  return this.fecha_nacimiento ? moment(this.fecha_nacimiento).format('YYYY-MM-DD') : 'Sin información';
 });
 
 ClienteSchema

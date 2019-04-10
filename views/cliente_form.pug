@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1 #{title}
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='nombre') Nombre del cliente:
+      input#nombre.form-control(type='text', placeholder='Nombre del cliente' name='nombre' value=(undefined===cliente ? '' : cliente.nombre), required='true')
+
+      label(for='apellidos') Apellidos del cliente:
+      input#apellidos.form-control(type='text', placeholder='Apellidos del cliente' name='apellidos' value=(undefined===cliente ? '' : cliente.apellidos), required='true')
+
+      label(for='fecha_nacimiento') Fecha de nacimiento del cliente:
+      input#fecha_nacimiento.form-control(type='date', placeholder='Escoge la fecha' name='fecha_nacimiento' value=(undefined===cliente ? '' : cliente.fecha_nacimiento), required='true')
+
+
+    button.btn.btn-primary(type='submit') Submit
+
+  if errors 
+   ul
+    for error in errors
+     li!= error.msg

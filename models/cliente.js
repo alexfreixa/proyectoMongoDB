@@ -12,13 +12,13 @@ var ClienteSchema = new Schema({
 });
 
 ClienteSchema
-.virtual('nombre')
+.virtual('nombre_apellido')
 .get(function () {
   return this.apellidos + ', ' + this.nombre;
 });
 
 ClienteSchema
-.virtual('fecha_nacimiento')
+.virtual('fecha_nacimiento_formatted')
 .get(function () {
   return (this.fecha_nacimiento).toString();
 });

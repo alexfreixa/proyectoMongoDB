@@ -11,6 +11,7 @@ var CocheSchema = new Schema(
     fecha_de_fabricacion: {type: Date},
     color: {type: String},
     precio_venta: {type: Number},
+    cliente: [{type: Schema.Types.ObjectId, ref: 'Cliente'}]
   }
 );
 
@@ -28,14 +29,14 @@ CocheSchema
 .get(function () {
   return this.marca + ' ' + this.modelo;
 });
-/*
+
 // Virtual para coche fecha de fabricacion formateada
 CocheSchema
 .virtual('fecha_de_fabricacion_formatted')
 .get(function () {
   return this.fecha_de_fabricacion ? moment(this.fecha_de_fabricacion).format('YYYY-MM-DD') : 'Sin información';
 });
-
+/*
 // Virtual para color del coche
 CocheSchema
 .virtual('color')

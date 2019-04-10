@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1=title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='nombre_concesionario') Nombre del Concesionario:
+      input#nombre_concesionario.form-control(type='text' placeholder='Nombre concesionario' name='nombre_concesionario' required='true' value=(undefined===concesionario ? '' : concesionario.nombre_concesionario) )
+      label(for='marca_concesionario') Marca:
+      input#marca_concesionario.form-control(type='text' placeholder='Marcas vendidas en el concesionario' name='marca_concesionario' required='true' value=(undefined===concesionario ? '' : concesionario.marca_concesionario))
+      label(for='localizacion_concesionario') Localizacion:
+      input#localizacion_concesionario.form-control(type='text' placeholder='Localizacion del concesionario' name='localizacion_concesionario' required='true' value=(undefined===concesionario ? '' : concesionario.localizacion_concesionario))
+      div.form-group
+      label(for='fecha_apertura') Fecha de apertura:
+      input#fecha_apertura.form-control(type='date' name='fecha_apertura' value=(undefined===concesionario ? '' : concesionario.fecha_apertura) )
+    
+    button.btn.btn-primary(type='submit') Submit
+  if errors 
+    ul
+      for error in errors
+        li!= error.msg

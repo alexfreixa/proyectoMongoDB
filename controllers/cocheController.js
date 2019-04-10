@@ -30,13 +30,6 @@ exports.index = function(req, res) {
 // Lista de todos los coches
 exports.coche_list = function (req, res, next) {
 
-    /*Coche.find()
-        .sort([['marca', 'ascending']])
-        .exec(function (err, list_coches) {
-            if (err) { return next(err); }
-            // Successful, so render.
-            res.render('coche_list', { title: 'Listado de coches', coche_list: list_coches });
-        })*/
 
     Coche.find({}, 'marca modelo ')
         .populate('concesionario')
@@ -51,26 +44,6 @@ exports.coche_list = function (req, res, next) {
 
 //Detalle del coche por concesionario especifico
 exports.coche_detail = function (req, res, next) {
-
-    /*async.parallel({
-        coche: function (callback) {
-            Coche.findById(req.params.id)
-                .exec(callback)
-        },
-        coches_concesionarios: function (callback) {
-            Coche.find({ 'coche': req.params.id }, 'title summary')
-                .exec(callback)
-        },
-    }, function (err, results) {
-        if (err) { return next(err); } // Error in API usage.
-        if (results.author == null) { // No results.
-            var err = new Error('No de ha encntrado ningun coche');
-            err.status = 404;
-            return next(err);
-        }
-        // Successful, so render.
-        res.render('coche_detail', { title: 'Detalles del coche', coche: results.coche, coches_concesionarios: results.coches_concesionarios });
-    });*/
 
     async.parallel({
         coche: function(callback) {

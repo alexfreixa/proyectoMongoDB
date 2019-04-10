@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 #{title}: #{concesionario.nombre}
+  p= concesionario.fecha_apertura
+  
+    p Estas seguro que quieres eliminar el concesionario: #{concesionario.nombre}?
+    
+    form(method='POST' action='')
+      div.form-group
+        input#concesionarioid.form-control(type='hidden',name='concesionarioid', required='true', value=concesionario._id )
+
+      button.btn.btn-primary(type='submit') Eliminar

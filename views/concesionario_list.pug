@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  
+  ul
+    each concesionario in concesionario_list
+      li 
+        a(href=concesionario.url) #{concesionario.nombre} 
+        |  (#{concesionario.fecha_apertura})
+
+    else
+      li There are no concesionarios.

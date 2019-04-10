@@ -1,0 +1,16 @@
+extends layout
+
+block content
+
+  h1 Concesionario: #{concesionario.nombre}
+  if concesionario.fecha_apertura==NULL
+     p #{'Sin información de la fecha de apertura'}
+  else
+    p #{concesionario.fecha_apertura}
+    p Localizacion: #{concesionario.localizacion}
+  
+  div(style='margin-left:20px;margin-top:20px')
+
+  hr
+  p
+  a(href=concesionario.url+'/delete') Delete concesionario

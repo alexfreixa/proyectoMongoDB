@@ -17,7 +17,7 @@ ClienteSchema
   return this.apellidos + ', ' + this.nombre;
 });
 
-AuthorSchema
+ClienteSchema
 .virtual('fecha_nacimiento')
 .get(function () {
   return (this.fecha_nacimiento).toString();

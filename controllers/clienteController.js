@@ -28,10 +28,10 @@ exports.cliente_detail = function(req, res, next) {
               .exec(callback);
         },
 
-        /*cliente_coches: function(callback) {
+        cliente_coches: function(callback) {
           Coche.find({ 'cliente': req.params.id })
           .exec(callback);
-        },*/
+        },
 
     }, function(err, results) {
         if (err) { return next(err); }
@@ -48,7 +48,7 @@ exports.cliente_detail = function(req, res, next) {
 
 // Display Cliente create form on GET.
 exports.cliente_create_get = function(req, res, next) {
-    res.render('cliente_form', { title: 'Create Cliente'});
+    res.render('cliente_form', { title: 'Añadir Cliente'});
 };
 
 // Handle Cliente create on POST.
@@ -81,7 +81,7 @@ exports.cliente_create_post = [
 
         if (!errors.isEmpty()) {
             // There are errors. Render the form again with sanitized values/error messages.
-            res.render('cliente_form', { title: 'Create Cliente', cliente: cliente, errors: errors.array()});
+            res.render('cliente_form', { title: 'Añadir Cliente (error)', cliente: cliente, errors: errors.array()});
         return;
         }
         else {
@@ -110,7 +110,6 @@ exports.cliente_create_post = [
     }
 ];
 
-
 // Display Cliente delete form on GET.
 exports.cliente_delete_get = function(req, res, next) {
 
@@ -127,7 +126,7 @@ exports.cliente_delete_get = function(req, res, next) {
             res.redirect('/catalog/clientes');
         }
         // Successful, so render.
-        res.render('cliente_delete', { title: 'Eliminando Cliente', cliente: results.cliente, cliente_coches: results.cliente_coches } );
+        res.render('cliente_delete', { title: 'Eliminar Cliente', cliente: results.cliente, cliente_coches: results.cliente_coches } );
     });
 
 };
@@ -147,7 +146,7 @@ exports.cliente_delete_post = function(req, res, next) {
         // Success
         if (results.cliente_coches.length > 0) {
             // Cliente has coches. Render in same way as for GET route.
-            res.render('cliente_delete', { title: 'Eliminar Cliente', cliente: results.cliente, cliente_coches: results.cliente_coches } );
+            res.render('cliente_delete', { title: 'Eliminar Cliente (error)', cliente: results.cliente, cliente_coches: results.cliente_coches } );
             return;
         }
         else {
@@ -174,7 +173,7 @@ exports.cliente_update_get = function(req, res, next) {
             return next(err);
         }
         // Success.
-        res.render('cliente_form', { title: 'Update Cliente', cliente: cliente });
+        res.render('cliente_form', { title: 'Modificar Cliente', cliente: cliente });
     });
 
 };
@@ -211,7 +210,7 @@ exports.cliente_update_post = [
 
         if (!errors.isEmpty()) {
             // There are errors. Render the form again with sanitized values and error messages.
-            res.render('cliente_form', { title: 'Update Cliente', cliente: cliente, errors: errors.array()});
+            res.render('cliente_form', { title: 'Modificar Cliente (error)', cliente: cliente, errors: errors.array()});
         return;
         }
         else {

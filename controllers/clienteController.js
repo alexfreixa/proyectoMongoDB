@@ -13,7 +13,7 @@ exports.cliente_list = function(req, res, next) {
     .exec(function (err, list_clientes) {
       if (err) { return next(err); }
       // Successful, so render.
-      res.render('cliente_list', { title: 'Cliente List', cliente_list:  list_clientes});
+      res.render('cliente_list', { title: 'Lista de clientes', cliente_list:  list_clientes});
     });
 
 };

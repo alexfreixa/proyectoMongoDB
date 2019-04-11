@@ -107,15 +107,13 @@ exports.coche_create_post = [
     },
 
     // Validar campos.
-    body('marca').isLength({ min: 1 }).trim().withMessage('El nombre de la marca es obligatorio')
-        .isAlphanumeric().withMessage('El nombre de la marca tiene que tener nombres alphanumericos.'),
+    body('marca').isLength({ min: 1 }).trim(),
 
-    body('modelo').isLength({ min: 1 }).trim().withMessage('El nombre del modelo es obligatorio')
-        .isAlphanumeric().withMessage('El nombre del modelo tiene que tener nombres alphanumericos.'),
+    body('modelo').isLength({ min: 1 }).trim(),
 
-    body('fecha_de_fabricacion', 'Fecha de fabricación invalida').optional({ checkFalsy: true }).isISO8601(),
-    body('color', 'No as escrito color').optional({ checkFalsy: true }).isISO8601(),
-    body('precio_venta', 'No has escrito el precio de venta').optional({ checkFalsy: true }).isISO8601(),
+    body('fecha_de_fabricacion', 'Fecha de fabricación invalida').isLength({ min: 1 }).trim(),
+    body('color', 'No as escrito color').isLength({ min: 1 }).trim(),
+    body('precio_venta', 'No has escrito el precio de venta').isLength({ min: 1 }).trim(),
 
     // Sanitize fields.
     sanitizeBody('marca').escape(),

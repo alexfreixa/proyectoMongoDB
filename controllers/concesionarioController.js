@@ -1,6 +1,6 @@
 var Concesionario = require('../models/concesionario');
 var async = require('async');
-//var Coche = require('../models/coche');
+var Coche = require('../models/coche');
 
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -106,16 +106,16 @@ exports.concesionario_delete_get = function (req, res, next) {
         concesionario: function (callback) {
             Concesionario.findById(req.params.id).exec(callback)
         },
-        /*concesionarios_coches: function (callback) {
+        concesionarios_coches: function (callback) {
             Coche.find({ 'concesionario': req.params.id }).exec(callback)
-        },*/
+        },
     }, function (err, results) {
         if (err) { return next(err); }
         if (results.concesionario == null) { // No results.
             res.redirect('/catalog/concesionarios');
         }
         // Successful, so render.
-        res.render('concesionario_delete', { title: 'Eliminando', concesionario: results.concesionario/*, concesionario_coches: results.concesionarios_coches*/ });
+        res.render('concesionario_delete', { title: 'Eliminando', concesionario: results.concesionario, concesionario_coches: results.concesionarios_coches });
     });
 
 };

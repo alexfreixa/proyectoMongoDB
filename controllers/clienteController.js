@@ -137,22 +137,22 @@ exports.cliente_delete_post = function(req, res, next) {
 
     async.parallel({
         cliente: function(callback) {
-            Cliente.findById(req.params.id).exec(callback);
+            Cliente.findById(req.params.clienteid).exec(callback);
         },
         cliente_coches: function(callback) {
-            Coche.find({ 'cliente': req.params.id }).exec(callback);
+            Coche.find({ 'cliente': req.params.clienteid }).exec(callback);
         },
     }, function(err, results) {
         if (err) { return next(err); }
         // Success
         if (results.cliente_coches.length > 0) {
-            // Cliente has coches. Render in same way as for GET route.
+            // Cliente a comprado alun coche.
             res.render('cliente_delete', { title: 'Eliminar Cliente', cliente: results.cliente, cliente_coches: results.cliente_coches } );
             return;
         }
         else {
             // Cliente has no coches. Delete object and redirect to the list of clientes.
-            Cliente.findByIdAndRemove(req.body.id, function deletecliente(err) {
+            Cliente.findByIdAndRemove(req.body.clienteid, function deletecliente(err) {
                 if (err) { return next(err); }
                 // Success - go to clientes list.
                 res.redirect('/catalog/clientes');

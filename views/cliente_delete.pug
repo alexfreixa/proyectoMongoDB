@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 #{title}: #{cliente.nombre}
+  
+    p Estas seguro que quieres eliminar el cliente: #{cliente.nombre}?
+    
+    form(method='POST' action='')
+      div.form-group
+        input#clienteid.form-control(type='hidden',name='clienteid', required='true', value=cliente._id )
+
+      button.btn.btn-primary(type='submit') Eliminar

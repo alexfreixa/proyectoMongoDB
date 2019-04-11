@@ -19,7 +19,7 @@ var BookInstance = require('./models/bookinstance')
 var Coche = require('./models/coche')
 var Cliente = require('./models/cliente')
 var Concesionario = require('./models/concesionario')
-var Compra = require('./models/compra')
+
 
 
 var mongoose = require('mongoose');

@@ -140,7 +140,7 @@ exports.coche_create_post = [
                 fecha_de_fabricacion: req.body.fecha_de_fabricacion,
                 color: req.body.color,
                 precio_venta: req.body.precio_venta,
-                cliente: req.body.cliente
+                cliente: req.body.nombre
             }
         );
 
@@ -158,7 +158,7 @@ exports.coche_create_post = [
             }, function(err, results) {
                 if (err) { return next(err); }
 
-                res.render('coche_form', { title: 'Crear Coche', marca: marca, errors: errors.array() });
+                res.render('coche_form', { title: 'Crear Coche', marca: results.marca, clientes: results.clientes, errors: errors.array() });
             });
             return;
         }

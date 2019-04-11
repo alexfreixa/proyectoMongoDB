@@ -55,13 +55,13 @@ exports.concesionario_create_post = [
     body('nombre_concesionario').isLength({ min: 1 }).trim().withMessage('Nombre must be specified.'),
     body('marca_concesionario').isLength({ min: 1 }).trim().withMessage('Marca must be specified.'),
     body('localizacion_concesionario').isLength({ min: 1 }).trim().withMessage('Localizacion must be specified.'),
-    body('fecha_apertura_concesionario', 'Invalid fecha de apertura.').optional({ checkFalsy: true }).isISO8601(),
+    body('fecha_apertura_concesionario', 'Invalid fecha de apertura.').isLength({ min: 1 }).trim(),
 
     // Sanitize fields.
     sanitizeBody('nombre_concesionario').escape(),
     sanitizeBody('marca_concesionario').escape(),
     sanitizeBody('localizacion_concesionario').escape(),
-    sanitizeBody('fecha_apertura_concesionario').toDate(),
+    sanitizeBody('fecha_apertura_concesionario').escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -171,19 +171,16 @@ exports.concesionario_update_get = function (req, res, next) {
 exports.concesionario_update_post = [
 
     // Validate fields.
-    body('nombre_concesionario').isLength({ min: 1 }).trim().withMessage('Nombre must be specified to update.')
-        .isAlphanumeric().withMessage('Nombre has non-alphanumeric characters.'),
-    body('marca_concesionario').isLength({ min: 1 }).trim().withMessage('Marca must be specified to update.')
-        .isAlphanumeric().withMessage('Marca has non-alphanumeric characters.'),
-    body('localizacion_concesionario').isLength({ min: 1 }).trim().withMessage('localizacion must be specified to update.')
-        .isAlphanumeric().withMessage('Localizacion has non-alphanumeric characters.'),
-    body('fecha_apertura_concesionario', 'Invalid date of death').optional({ checkFalsy: true }).isISO8601(),
+    body('nombre_concesionario').isLength({ min: 1 }).trim().withMessage('Nombre must be specified to update.'),
+    body('marca_concesionario').isLength({ min: 1 }).trim().withMessage('Marca must be specified to update.'),
+    body('localizacion_concesionario').isLength({ min: 1 }).trim().withMessage('localizacion must be specified to update.'),
+    body('fecha_apertura_concesionario', 'Invalid fecha de apertura.').isLength({ min: 1 }).trim(),
 
     // Sanitize fields.
     sanitizeBody('nombre_concesionario').escape(),
     sanitizeBody('marca_concesionario').escape(),
     sanitizeBody('localizacion_concesionario').escape(),
-    sanitizeBody('fecha_apertura_concesionario').toDate(),
+    sanitizeBody('fecha_apertura_concesionario').escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {

@@ -58,6 +58,12 @@ exports.coche_detail = function (req, res, next) {
           Concesionario.find({ 'coche': req.params.id })
           .exec(callback);
         },
+        todos_concesionarios: function(callback) {
+            Concesionario.find(callback);
+        },
+        todos_clientes: function(callback) {
+            Cliente.find(callback);
+        },
         
     }, function(err, results) {
         if (err) { return next(err); }
@@ -67,7 +73,7 @@ exports.coche_detail = function (req, res, next) {
             return next(err);
         }
         // Successful, so render.
-        res.render('coche_detail', { title: 'Detalles del coche', coche:  results.coche, coches_concesionarios: results.coches_concesionarios } );
+        res.render('coche_detail', { title: 'Detalles del coche', coche:  results.coche, coches_concesionarios: results.coches_concesionarios, todos_concesionarios: results.todos_concesionarios, todos_clientes: results.todos_clientes } );
     });
 
 };
@@ -109,8 +115,7 @@ exports.coche_create_post = [
     // Validar campos.
     body('marca').isLength({ min: 1 }).trim(),
 
-    body('modelo').isLength({ min: 1 }).trim().withMessage('El nombre del modelo es obligatorio')
-        .isAlphanumeric().withMessage('El nombre del modelo tiene que tener nombres alphanumericos.'),
+    body('modelo').isLength({ min: 1 }).trim(),
 
     body('fecha_de_fabricacion', 'Fecha de fabricación invalida').isLength({ min: 1 }).trim(),
     body('color', 'No as escrito color').isLength({ min: 1 }).trim(),

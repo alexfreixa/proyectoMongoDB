@@ -25,11 +25,11 @@ exports.concesionario_detail = function (req, res, next) {
         concesionario: function (callback) {
             Concesionario.findById(req.params.id)
                 .exec(callback)
-        },/*
+        },
         concesionarios_coches: function (callback) {
             Coche.find({ 'concesionario': req.params.id }, 'title summary')
                 .exec(callback)
-        },*/
+        },
     }, function (err, results) {
         if (err) { return next(err); } // Error in API usage.
         if (results.concesionario == null) { // No results.
@@ -38,7 +38,7 @@ exports.concesionario_detail = function (req, res, next) {
             return next(err);
         }
         // Successful, so render.
-        res.render('concesionario_detail', { title: 'Concesionario Detail', concesionario: results.concesionario/*, concesionario_coches: results.concesionarios_coches */});
+        res.render('concesionario_detail', { title: 'Concesionario Detail', concesionario: results.concesionario, concesionario_coches: results.concesionarios_coches });
     });
 
 };
@@ -126,18 +126,18 @@ exports.concesionario_delete_post = function (req, res, next) {
     async.parallel({
         concesionario: function (callback) {
             Concesionario.findById(req.body.concesionarioid).exec(callback)
-        },/*
+        },
         concesionarios_coches: function (callback) {
             Coche.find({ 'concesionario': req.body.concesionarioid }).exec(callback)
-        },*/
+        },
     }, function (err, results) {
         if (err) { return next(err); }
         // Success.
-        /*if (results.concesionarios_coches.length > 0) {
+        if (results.concesionarios_coches.length > 0) {
             // Concesionario has coches. Render in same way as for GET route.
             res.render('concesionario_delete', { title: 'Delete Concesionario', concesionario: results.concesionario, concesionario_coches: results.concesionarios_coches });
             return;
-        }*/
+        }
         else {
             // Concesionario has no coches. Delete object and redirect to the list of concesionarios.
             Concesionario.findByIdAndRemove(req.body.concesionarioid, function deleteConcesionario(err) {

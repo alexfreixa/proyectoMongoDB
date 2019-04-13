@@ -55,9 +55,15 @@ exports.coche_detail = function (req, res, next) {
         },
         coches_concesionarios: function(callback) {
 
-          Coche.find({ 'concesionario': req.params.id })
+          Concesionario.find({ 'coche': req.params.id })
           .exec(callback);
         },
+        todos_concesionarios: function(callback) {
+            Concesionario.find(callback);
+        },
+        /*todos_clientes: function(callback) {
+            Cliente.find(callback);
+        },*/
         
     }, function(err, results) {
         if (err) { return next(err); }
@@ -67,7 +73,7 @@ exports.coche_detail = function (req, res, next) {
             return next(err);
         }
         // Successful, so render.
-        res.render('coche_detail', { title: 'Detalles del coche', coche:  results.coche, coches_concesionarios: results.coches_concesionarios } );
+        res.render('coche_detail', { title: 'Detalles del coche', coche:  results.coche, coches_concesionarios: results.coches_concesionarios, todos_concesionarios: results.todos_concesionarios, /*todos_clientes: results.todos_clientes*/ } );
     });
 
 };
@@ -82,13 +88,13 @@ exports.coche_create_get = function (req, res, next) {
             Concesionario.find(callback);
         },
 
-        clientes: function(callback) {
+        /*clientes: function(callback) {
             Cliente.find(callback);
-        },
+        },*/
 
     }, function(err, results) {
         if (err) { return next(err); }
-        res.render('coche_form', { title: 'Crear Coche', concesionarios:results.concesionarios, clientes:results.clientes });
+        res.render('coche_form', { title: 'Crear Coche', concesionarios:results.concesionarios /*clientes:results.clientes*/ });
     });
 };
 
@@ -122,7 +128,7 @@ exports.coche_create_post = [
     sanitizeBody('color').escape(),
     sanitizeBody('precio_venta').toInt(),
 
-    sanitizeBody('cliente.*').escape(),
+    //sanitizeBody('cliente.*').escape(),
 
     // Proceso despues de la validación y la "sanilizacion".
     (req, res, next) => {
@@ -137,26 +143,26 @@ exports.coche_create_post = [
                 modelo: req.body.modelo,
                 fecha_de_fabricacion: req.body.fecha_de_fabricacion,
                 color: req.body.color,
-                precio_venta: req.body.precio_venta,
-                cliente: req.body.nombre
+                precio_venta: req.body.precio_venta
+                //cliente: req.body.nombre
             }
         );
 
         if (!errors.isEmpty()) {
-            // Hay errores. Render form again with sanitized values/errors messages.
+            // Hay errores. 
 
             // Conseguir todos los concesionarios y clientes para elformulario.
             async.parallel({
                 concesionarios: function(callback) {
                     Concesionario.find(callback);
                 },
-                clientes: function(callback) {
+                /*clientes: function(callback) {
                     Cliente.find(callback);
-                },
+                },*/
             }, function(err, results) {
                 if (err) { return next(err); }
 
-                res.render('coche_form', { title: 'Crear Coche', marca: results.marca, clientes: results.clientes, errors: errors.array() });
+                res.render('coche_form', { title: 'Crear Coche', marca: results.marca, /*clientes: results.clientes,*/ errors: errors.array() });
             });
             return;
         }
@@ -250,9 +256,9 @@ exports.coche_update_get = function (req, res, next) {
         concesionarios: function(callback) {
             Concesionario.find(callback);
         },
-        clientes: function(callback) {
+        /*clientes: function(callback) {
             Cliente.find(callback);
-        },
+        },*/
         }, function(err, results) {
             if (err) { return next(err); }
             if (results.coche==null) { // No results.
@@ -262,7 +268,7 @@ exports.coche_update_get = function (req, res, next) {
             }
             // Success.
             
-            res.render('coche_form', { title: 'Actualizar Coche', concesionarios:results.concesionarios, clientes:results.clientes, coche: results.coche });
+            res.render('coche_form', { title: 'Actualizar Coche', concesionarios:results.concesionarios, /*clientes:results.clientes,*/ coche: results.coche });
         });
 
 };
@@ -299,7 +305,7 @@ exports.coche_update_post = [
     sanitizeBody('color').escape(),
     sanitizeBody('precio_venta').toInt(),
 
-    sanitizeBody('cliente.*').escape(),
+    //sanitizeBody('cliente.*').escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -314,9 +320,9 @@ exports.coche_update_post = [
                 modelo: req.body.modelo,
                 fecha_de_fabricacion: req.body.fecha_de_fabricacion,
                 color: req.body.color,
-                precio_venta: req.body.precio_venta,
-                cliente: (typeof req.body.cliente==='undefined') ? [] : req.body.cliente,
-                _id:req.params.id // Se requiere este campo o si no se pondra otra id de cliente
+                precio_venta: req.body.precio_venta
+                /*cliente: (typeof req.body.cliente==='undefined') ? [] : req.body.cliente,
+                _id:req.params.id // Se requiere este campo o si no se pondra otra id de cliente*/
             }
         );
 
@@ -331,13 +337,13 @@ exports.coche_update_post = [
                 concesionarios: function(callback) {
                     Concesionario.find(callback);
                 },
-                clientes: function(callback) {
+                /*clientes: function(callback) {
                     Cliente.find(callback);
-                },
+                },*/
             }, function(err, results) {
                 if (err) { return next(err); }
 
-                res.render('coche_form', { title: 'Actualizar Coche', concesionarios:results.concesionarios, clientes:results.clientes, coche: coche, errors: errors.array() });
+                res.render('coche_form', { title: 'Actualizar Coche', concesionarios:results.concesionarios, /*clientes:results.clientes,*/ coche: coche, errors: errors.array() });
             });
             return;
         

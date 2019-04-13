@@ -25,7 +25,8 @@ exports.cliente_detail = function(req, res, next) {
         cliente: function(callback) {
 
             Cliente.findById(req.params.id)
-              .exec(callback);
+            .populate('coche')
+            .exec(callback);
         },
 
         cliente_coches: function(callback) {
@@ -48,11 +49,31 @@ exports.cliente_detail = function(req, res, next) {
 
 // Display Cliente create form on GET.
 exports.cliente_create_get = function(req, res, next) {
-    res.render('cliente_form', { title: 'Create Cliente'});
+
+    // Conseguir los coches, que podremos añadirlo en la tabla cliente.
+    async.parallel({
+        coches: function(callback) {
+            Coche.find(callback);
+        },
+
+    }, function(err, results) {
+        if (err) { return next(err); }    
+        res.render('cliente_form', { title: 'Create Cliente', coches: results.coches});
+    });
 };
 
 // Handle Cliente create on POST.
 exports.cliente_create_post = [
+//Convertimos coche en una array
+    (req, res, next) => {
+            if(!(req.body.coche instanceof Array)){
+                if(typeof req.body.coche==='undefined')
+                req.body.coche=[];
+                else
+                req.body.coche=new Array(req.body.coche);
+            }
+            next();
+        },
 
     // Validate that the fields are not empty.
     body('nombre', 'Cliente nombre required').isLength({ min: 1 }).trim(),
@@ -63,6 +84,8 @@ exports.cliente_create_post = [
     sanitizeBody('nombre').escape(),
     sanitizeBody('apellidos').escape(),
     sanitizeBody('fecha_nacimiento').escape(),
+
+    sanitizeBody('coche.*').escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -75,13 +98,29 @@ exports.cliente_create_post = [
             {
                 nombre: req.body.nombre,
                 apellidos: req.body.apellidos,
-                fecha_nacimiento: req.body.fecha_nacimiento
+                fecha_nacimiento: req.body.fecha_nacimiento,
+                coche: req.body.coche
             }
         );
 
         if (!errors.isEmpty()) {
-            // There are errors. Render the form again with sanitized values/error messages.
-            res.render('cliente_form', { title: 'Create Cliente', cliente: cliente, errors: errors.array()});
+            // Hay errores. 
+            async.parallel({
+                coches: function(callback) {
+                    Coche.find(callback);
+                }, 
+
+            }, function(err, results) {
+                if (err) { return next(err); }
+                // Marcamos cocches como checked.
+                for (let i = 0; i < results.coches.length; i++) {
+                    if (book.genre.indexOf(results.coches[i]._id) > -1) {
+                        results.coches[i].checked='true';
+                    }
+                }
+                
+                    res.render('cliente_form', { title: 'Create Cliente', cliente: cliente, coches: results.coches, errors: errors.array()});
+            });
         return;
         }
         else {
@@ -146,7 +185,7 @@ exports.cliente_delete_post = function(req, res, next) {
         if (err) { return next(err); }
         // Success
         if (results.cliente_coches.length > 0) {
-            // Cliente a comprado alun coche.
+            // Cliente a comprado algun coche.
             res.render('cliente_delete', { title: 'Eliminar Cliente', cliente: results.cliente, cliente_coches: results.cliente_coches } );
             return;
         }
@@ -166,22 +205,53 @@ exports.cliente_delete_post = function(req, res, next) {
 // Display Cliente update form on GET.
 exports.cliente_update_get = function(req, res, next) {
 
-    Cliente.findById(req.params.id, function(err, cliente) {
-        if (err) { return next(err); }
-        if (cliente==null) { // No results.
-            var err = new Error('Cliente not found');
-            err.status = 404;
-            return next(err);
-        }
+    async.parallel({
+        cliente: function(callback){
+            Cliente.findById(req.params.id).populate('coche').exec(callback);
+        },
+        coches: function(callback) {
+            Coche.find(callback);
+        },
+            /*if (err) { return next(err); }
+            if (cliente==null) { // No results.
+                var err = new Error('Cliente not found');
+                err.status = 404;
+                return next(err);*/
+            }, function (err,results){
+                if (err) { return next(err); }
+                if (results.cliente==null) { // No results.
+                var err = new Error('Cliente not found');
+                err.status = 404;
+                return next(err);
+            }
+
         // Success.
-        res.render('cliente_form', { title: 'Update Cliente', cliente: cliente });
+        // Mark our selected coches as checked.
+            for (var all_g_iter = 0; all_g_iter < results.coches.length; all_g_iter++) {
+                for (var cliente_g_iter = 0; cliente_g_iter < results.cliente.coche.length; cliente_g_iter++) {
+                    if (results.coches[all_g_iter]._id.toString()==results.cliente.coche[cliente_g_iter]._id.toString()) {
+                        results.coches[all_g_iter].checked='true';
+                    }
+                }
+            }
+        res.render('cliente_form', { title: 'Update Cliente', cliente: results.cliente,coches: results.coches });
     });
 
 };
 
 // Handle Cliente update on POST.
 exports.cliente_update_post = [
-   
+
+    //Convertimos coche en una array
+        (req, res, next) => {
+                if(!(req.body.coche instanceof Array)){
+                    if(typeof req.body.coche==='undefined')
+                    req.body.coche=[];
+                    else
+                    req.body.coche=new Array(req.body.coche);
+                }
+                next();
+            },
     // Validate that the fields are not empty.
     body('nombre', 'Cliente nombre required').isLength({ min: 1 }).trim(),
     body('apellidos', 'Cliente apellidos required').isLength({ min: 1 }).trim(),
@@ -191,6 +261,8 @@ exports.cliente_update_post = [
     sanitizeBody('nombre').escape(),
     sanitizeBody('apellidos').escape(),
     sanitizeBody('fecha_nacimiento').escape(),
+
+    sanitizeBody('coche.*').escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -204,14 +276,30 @@ exports.cliente_update_post = [
           nombre: req.body.nombre,
           apellidos: req.body.apellidos,
           fecha_nacimiento: req.body.fecha_nacimiento,
+          coche: (typeof req.body.coche==='undefined') ? [] : req.body.coche,
           _id: req.params.id
           }
         );
 
 
         if (!errors.isEmpty()) {
-            // There are errors. Render the form again with sanitized values and error messages.
-            res.render('cliente_form', { title: 'Update Cliente', cliente: cliente, errors: errors.array()});
+            // Hay errores
+
+            async.parallel({
+                coches: function(callback) {
+                    Coche.find(callback);
+                }, 
+
+            }, function(err, results) {
+                // Marcamos coche como seleccionado
+                for (let i = 0; i < results.coches.length; i++) {
+                    if (cliente.genre.indexOf(results.coches[i]._id) > -1) {
+                        results.coches[i].checked='true';
+                    }
+                }
+
+                res.render('cliente_form', { title: 'Update Cliente', cliente: cliente, coches: results.coches, errors: errors.array()});
+            });
         return;
         }
         else {

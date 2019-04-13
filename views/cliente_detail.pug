@@ -4,21 +4,12 @@ block content
 
   h1 Cliente: #{cliente.nombre_apellido}
   h3 Fecha nacimiento: #{cliente.fecha_nacimiento_formatted}
+  p #[strong Coches comprados:]&nbsp;
+    each val, index in cliente.coche
+      a(href=val.url) #{val.name}
+      if index < cliente.coche.length - 1
+        |,
 
-
-  
-  div(style='margin-left:20px;margin-top:20px')
-
-    h4 Coches comprados
-    
-    dl
-      each coche in cliente_coches
-        dt 
-          a(href=coche.url) #{coche.marca} #{coche.modelo}
-        dd #{coche.precio_venta}
-
-      else
-        p Este cliente no ha comprado ningun coche
 
   hr
   p

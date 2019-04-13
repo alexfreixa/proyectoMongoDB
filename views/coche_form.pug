@@ -35,19 +35,19 @@ block content
       label(for='precio_venta') Precio de venta:
       input#precio_venta.form-control(type='number' placeholder='Introduce el precio' name='precio_venta' value=(undefined===coche ? '' : coche.precio_venta))
 
-      label(for='cliente') Cliente:
-      select#cliente.form-control(type='select' placeholder='Selecciona el cliente' name='cliente' required='true' )
-        for cliente in clientes
-          if coche
-            option(
-              value=cliente._id
-              selected=(
-                cliente._id.toString()==coche.cliente._id
-                || cliente._id.toString()==coche.cliente
-              ) ? 'selected' : false
-            ) #{cliente.nombre}
-          else
-            option(value=cliente._id) #{cliente.nombre}
+      //- label(for='cliente') Cliente:
+      //-select#cliente.form-control(type='select' placeholder='Selecciona el cliente' name='cliente' required='true' )
+        //-for cliente in clientes
+          //-if coche
+            //-option(
+              //-value=cliente._id
+              //-selected=(
+                //-cliente._id.toString()==coche.cliente._id
+                //- || cliente._id.toString()==coche.cliente
+              //- ) ? 'selected' : false
+            //- ) #{cliente.nombre}
+          //- else
+            //- option(value=cliente._id) #{cliente.nombre}
     
     button.btn.btn-primary(type='submit') Submit
   if errors 

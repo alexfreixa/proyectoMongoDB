@@ -2,19 +2,21 @@ extends layout
 
 block content
 
-  h1 Coche: #{coche.marca_modelo}
+  h1 Coche: #{coche.modelo}
   if coche.fecha_de_fabricacion==NULL
      p No hay registro de la fecha de fabricación
   else
-    p #{coche.fecha_de_fabricacion_formatted}
-
-  p [Strong Concesionario:]
-    a(href=coche.concesionario.url) #{coche.concesionario.marca}
-  p [Strong Color:] #{coche.color}
-  p [Strong Precio:] #{coche.precio_venta}€
-  //p [Strong Cliente:] 
-    a(href=coche.cliente.url) #{coche.cliente}
-  
+    p #[Strong Fecha de fabricación: ] #{coche.fecha_de_fabricacion_formatted}
+    p #[strong Concesionario: ]
+      for concesionario in todos_concesionarios
+        if concesionario.id == coche.marca
+          a(href=concesionario.url) #{concesionario.nombre}
+          p #[strong Marca:] #{concesionario.marca_concesionario}
+        else
+    p #[Strong Color:] #{coche.color}
+    p #[Strong Precio:] #{coche.precio_venta}
+    //- p #[Strong Cliente:]
+      //- a(href=coche.cliente.url) #{coche.cliente}
 
   div(style='margin-left:20px;margin-top:20px')
 

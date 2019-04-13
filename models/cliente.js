@@ -7,7 +7,8 @@ var Schema = mongoose.Schema;
 var ClienteSchema = new Schema({
     nombre: {type: String, required: true, min: 2, max: 40},
     apellidos: {type: String, required: true, min: 2, max: 100},
-    fecha_nacimiento: {type: Date}
+    fecha_nacimiento: {type: Date},
+    coche: [{type: Schema.Types.ObjectId, ref: 'Coche'}]
     //edad
 });
 

@@ -11,7 +11,7 @@ var CocheSchema = new Schema(
     fecha_de_fabricacion: {type: Date},
     color: {type: String},
     precio_venta: {type: Number},
-    cliente: [{type: Schema.Types.ObjectId, ref: 'Cliente'}]
+    //cliente: [{type: Schema.Types.ObjectId, ref: 'Cliente'}]
   }
 );
 

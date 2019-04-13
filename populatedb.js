@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-console.log('This script populates some test books, authors, genres and bookinstances to your database. Specified database as argument - e.g.: populatedb mongodb+srv://cooluser:coolpassword@cluster0-mbdj7.mongodb.net/local_library?retryWrites=true');
+console.log('Este script populate añade coches, clientes y concesionarios en tu base de datos. Specified database as argument - e.g.: populatedb mongodb+srv://cooluser:coolpassword@cluster0-mbdj7.mongodb.net/local_library?retryWrites=true');
 
 // Get arguments passed on command line
 var userArgs = process.argv.slice(2);
@@ -37,109 +37,79 @@ var bookinstances = []
 var coches = []
 var clientes = []
 var concesionarios = []
-var compras = []
 
-function authorCreate(first_name, family_name, d_birth, d_death, cb) {
-  authordetail = {first_name:first_name , family_name: family_name }
-  if (d_birth != false) authordetail.date_of_birth = d_birth
-  if (d_death != false) authordetail.date_of_death = d_death
+
+function concesionarioCreate(nombre_concesionario, marca_concesionario, localizacion_concesionario, fecha_apertura_concesionario, cb) {
+  concesionariodetail = {nombre_concesionario:nombre_concesionario , marca_concesionario: marca_concesionario, localizacion_concesionario: localizacion_concesionario }
+  if (fecha_apertura_concesionario != false) concesionariodetail.fecha_apertura_concesionario = fecha_apertura_concesionario
   
-  var author = new Author(authordetail);
+  var concesionario = new Concesionario(concesionariodetail);
        
-  author.save(function (err) {
+  concesionario.save(function (err) {
     if (err) {
       cb(err, null)
       return
     }
-    console.log('New Author: ' + author);
-    authors.push(author)
-    cb(null, author)
+    console.log('New Concesionario: ' + concesionario);
+    concesionarios.push(concesionario)
+    cb(null, concesionario)
   }  );
 }
 
-function genreCreate(name, cb) {
-  var genre = new Genre({ name: name });
-       
-  genre.save(function (err) {
+function clienteCreate(nombre, apellidos, fecha_nacimiento, coche, cb) {
+  
+  clientedetail = { 
+    nombre: nombre,
+    apellidos: apellidos,
+    fecha_nacimiento: fecha_nacimiento
+  }
+  if (coche != false) clientedetail.coche = coche
+
+  var cliente = new Cliente(clientedetail);
+
+  cliente.save(function (err) {
     if (err) {
       cb(err, null);
       return;
     }
-    console.log('New Genre: ' + genre);
-    genres.push(genre)
-    cb(null, genre);
+    console.log('New Genre: ' + cliente);
+    clientes.push(cliente)
+    cb(null, cliente);
   }   );
 }
 
-function bookCreate(title, summary, isbn, author, genre, cb) {
-  bookdetail = { 
-    title: title,
-    summary: summary,
-    author: author,
-    isbn: isbn
+function cocheCreate(marca, modelo, fecha_de_fabricacion, color, precio_venta, cb) {
+  cochedetail = { 
+    marca: marca,
+    modelo: modelo,
+    fecha_de_fabricacion: fecha_de_fabricacion,
+    color: color,
+    precio_venta: precio_venta
   }
-  if (genre != false) bookdetail.genre = genre
     
-  var book = new Book(bookdetail);    
-  book.save(function (err) {
+  var coche = new Coche(cochedetail);    
+  coche.save(function (err) {
     if (err) {
       cb(err, null)
       return
     }
-    console.log('New Book: ' + book);
-    books.push(book)
-    cb(null, book)
+    console.log('New Coche: ' + coche);
+    coches.push(coche)
+    cb(null, coche)
   }  );
 }
 
 
-function bookInstanceCreate(book, imprint, due_back, status, cb) {
-  bookinstancedetail = { 
-    book: book,
-    imprint: imprint
-  }    
-  if (due_back != false) bookinstancedetail.due_back = due_back
-  if (status != false) bookinstancedetail.status = status
-    
-  var bookinstance = new BookInstance(bookinstancedetail);    
-  bookinstance.save(function (err) {
-    if (err) {
-      console.log('ERROR CREATING BookInstance: ' + bookinstance);
-      cb(err, null)
-      return
-    }
-    console.log('New BookInstance: ' + bookinstance);
-    bookinstances.push(bookinstance)
-    cb(null, book)
-  }  );
-}
-
-
-function createGenreAuthors(cb) {
+function createConcesionarios(cb) {
     async.series([
         function(callback) {
-          authorCreate('Patrick', 'Rothfuss', '1973-06-06', false, callback);
+          concesionarioCreate('Renault', 'Renault', 'Calle Torredembarra', '1973-06-06', callback);
         },
         function(callback) {
-          authorCreate('Ben', 'Bova', '1932-11-8', false, callback);
+          concesionarioCreate('Toyota', 'Toyta', 'Calle Montblanc', '1992-11-8', callback);
         },
         function(callback) {
-          authorCreate('Isaac', 'Asimov', '1920-01-02', '1992-04-06', callback);
-        },
-        function(callback) {
-          authorCreate('Bob', 'Billings', false, false, callback);
-        },
-        function(callback) {
-          authorCreate('Jim', 'Jones', '1971-12-16', false, callback);
-        },
-        function(callback) {
-          genreCreate("Fantasy", callback);
-        },
-        function(callback) {
-          genreCreate("Science Fiction", callback);
-        },
-        function(callback) {
-          genreCreate("French Poetry", callback);
+          concesionarioCreate('Tesla', 'Tesla', 'Calle Matadepera', '2015-04-06', callback);
         },
         ],
         // optional callback
@@ -147,70 +117,31 @@ function createGenreAuthors(cb) {
 }
 
 
-function createBooks(cb) {
+function createCoches(cb) {
     async.parallel([
         function(callback) {
-          bookCreate('The Name of the Wind (The Kingkiller Chronicle, #1)', 'I have stolen princesses back from sleeping barrow kings. I burned down the town of Trebon. I have spent the night with Felurian and left with both my sanity and my life. I was expelled from the University at a younger age than most people are allowed in. I tread paths by moonlight that others fear to speak of during day. I have talked to Gods, loved women, and written songs that make the minstrels weep.', '9781473211896', authors[0], [genres[0],], callback);
+          cocheCreate(concesionarios[0], 'Clio', '2001-06-06', 'verde', 10000, callback);
         },
         function(callback) {
-          bookCreate("The Wise Man's Fear (The Kingkiller Chronicle, #2)", 'Picking up the tale of Kvothe Kingkiller once again, we follow him into exile, into political intrigue, courtship, adventure, love and magic... and further along the path that has turned Kvothe, the mightiest magician of his age, a legend in his own time, into Kote, the unassuming pub landlord.', '9788401352836', authors[0], [genres[0],], callback);
+          cocheCreate(concesionarios[1], 'Corolla', '2005-07-16', 'gris', 10000, callback);
         },
         function(callback) {
-          bookCreate("The Slow Regard of Silent Things (Kingkiller Chronicle)", 'Deep below the University, there is a dark place. Few people know of it: a broken web of ancient passageways and abandoned rooms. A young woman lives there, tucked among the sprawling tunnels of the Underthing, snug in the heart of this forgotten place.', '9780756411336', authors[0], [genres[0],], callback);
+          cocheCreate(concesionarios[0], 'Kadjar', '2015-12-17', 'gris', 10000, callback);
         },
-        function(callback) {
-          bookCreate("Apes and Angels", "Humankind headed out to the stars not for conquest, nor exploration, nor even for curiosity. Humans went to the stars in a desperate crusade to save intelligent life wherever they found it. A wave of death is spreading through the Milky Way galaxy, an expanding sphere of lethal gamma ...", '9780765379528', authors[1], [genres[1],], callback);
-        },
-        function(callback) {
-          bookCreate("Death Wave","In Ben Bova's previous novel New Earth, Jordan Kell led the first human mission beyond the solar system. They discovered the ruins of an ancient alien civilization. But one alien AI survived, and it revealed to Jordan Kell that an explosion in the black hole at the heart of the Milky Way galaxy has created a wave of deadly radiation, expanding out from the core toward Earth. Unless the human race acts to save itself, all life on Earth will be wiped out...", '9780765379504', authors[1], [genres[1],], callback);
-        },
-        function(callback) {
-          bookCreate('Test Book 1', 'Summary of test book 1', 'ISBN111111', authors[4], [genres[0],genres[1]], callback);
-        },
-        function(callback) {
-          bookCreate('Test Book 2', 'Summary of test book 2', 'ISBN222222', authors[4], false, callback)
-        }
         ],
         // optional callback
         cb);
 }
 
 
-function createBookInstances(cb) {
+function createClientes(cb) {
     async.parallel([
         function(callback) {
-          bookInstanceCreate(books[0], 'London Gollancz, 2014.', false, 'Available', callback)
+          clienteCreate('Andres', 'Baco', '1997-06-20', [coches[0],], callback)
         },
         function(callback) {
-          bookInstanceCreate(books[1], ' Gollancz, 2011.', false, 'Loaned', callback)
+          clienteCreate('Pepe', 'Viyuela', '1970-05-28', [coches[1],], callback)
         },
-        function(callback) {
-          bookInstanceCreate(books[2], ' Gollancz, 2015.', false, false, callback)
-        },
-        function(callback) {
-          bookInstanceCreate(books[3], 'New York Tom Doherty Associates, 2016.', false, 'Available', callback)
-        },
-        function(callback) {
-          bookInstanceCreate(books[3], 'New York Tom Doherty Associates, 2016.', false, 'Available', callback)
-        },
-        function(callback) {
-          bookInstanceCreate(books[3], 'New York Tom Doherty Associates, 2016.', false, 'Available', callback)
-        },
-        function(callback) {
-          bookInstanceCreate(books[4], 'New York, NY Tom Doherty Associates, LLC, 2015.', false, 'Available', callback)
-        },
-        function(callback) {
-          bookInstanceCreate(books[4], 'New York, NY Tom Doherty Associates, LLC, 2015.', false, 'Maintenance', callback)
-        },
-        function(callback) {
-          bookInstanceCreate(books[4], 'New York, NY Tom Doherty Associates, LLC, 2015.', false, 'Loaned', callback)
-        },
-        function(callback) {
-          bookInstanceCreate(books[0], 'Imprint XXX2', false, false, callback)
-        },
-        function(callback) {
-          bookInstanceCreate(books[1], 'Imprint XXX3', false, false, callback)
-        }
         ],
         // Optional callback
         cb);
@@ -219,19 +150,19 @@ function createBookInstances(cb) {
 
 
 async.series([
-    createGenreAuthors,
-    createBooks,
-    createBookInstances
+    createConcesionarios,
+    createCoches,
+    createClientes
 ],
 // Optional callback
 function(err, results) {
     if (err) {
         console.log('FINAL ERR: '+err);
     }
-    else {
+    /*else {
         console.log('BOOKInstances: '+bookinstances);
         
-    }
+    }*/
     // All done, disconnect from database
     mongoose.connection.close();
 });

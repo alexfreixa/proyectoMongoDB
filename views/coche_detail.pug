@@ -6,13 +6,13 @@ block content
   if coche.fecha_de_fabricacion==NULL
      p No hay registro de la fecha de fabricación
   else
-    p #{coche.fecha_de_fabricacion}
+    p #{coche.fecha_de_fabricacion_formatted}
 
   p [Strong Concesionario:]
     a(href=coche.concesionario.url) #{coche.concesionario.marca}
   p [Strong Color:] #{coche.color}
-  p [Strong Precio:] #{coche.precio_venta}
-  p [Strong Cliente:] 
+  p [Strong Precio:] #{coche.precio_venta}€
+  //p [Strong Cliente:] 
     a(href=coche.cliente.url) #{coche.cliente}
   
 
@@ -21,4 +21,4 @@ block content
   p
     a(href=coche.url+'/delete') Delete Coche
   p
-    a(href=book.url+'/update') Update Coche
+    a(href=coche.url+'/update') Update Coche

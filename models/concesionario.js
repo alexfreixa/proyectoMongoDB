@@ -12,6 +12,13 @@ var ConcesionarioSchema = new Schema(
   }
 );
 
+// Virtual for concesionario's URL
+ConcesionarioSchema
+.virtual('url')
+.get(function () {
+  return '/catalog/concesionario/' + this._id;
+});
+
 // Virtual for author's full name
 ConcesionarioSchema
 .virtual('nombre')
@@ -37,12 +44,7 @@ ConcesionarioSchema
   return this.fecha_apertura_concesionario ? moment(this.fecha_apertura_concesionario).format('YYYY-MM-DD') : 'Sin información';
 });
 
-// Virtual for concesionario's URL
-ConcesionarioSchema
-.virtual('url')
-.get(function () {
-  return '/catalog/concesionario/' + this._id;
-});
+
 
 //Export model
 module.exports = mongoose.model('Concesionario', ConcesionarioSchema);

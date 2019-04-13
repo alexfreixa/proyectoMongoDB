@@ -55,7 +55,7 @@ exports.coche_detail = function (req, res, next) {
         },
         coches_concesionarios: function(callback) {
 
-          Concesionario.find({ 'coche': req.params.id })
+          Coche.find({ 'concesionario': req.params.id })
           .exec(callback);
         },
         

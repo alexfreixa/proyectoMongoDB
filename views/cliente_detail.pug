@@ -6,7 +6,7 @@ block content
   h3 Fecha nacimiento: #{cliente.fecha_nacimiento_formatted}
   p #[strong Coches comprados:]&nbsp;
     each val, index in cliente.coche
-      a(href=val.url) #{val.name}
+      a(href=val.url) #{val.modelo}
       if index < cliente.coche.length - 1
         |,
 

@@ -191,13 +191,18 @@ exports.coche_delete_get = function (req, res, next) {
         coches_concesionarios: function (callback) {
             Concesionario.find({ 'coche': req.params.id }).exec(callback)
         },
+
+        todos_concesionarios: function(callback) {
+            Concesionario.find(callback);
+        },
+
     }, function (err, results) {
         if (err) { return next(err); }
         if (results.coche == null) { // No results.
             res.redirect('/catalog/coches');
         }
         // Successful, so render.
-        res.render('coche_delete', { title: 'Borrar coche', coche: results.coche, coches_concesionarios: results.coches_concesionarios });
+        res.render('coche_delete', { title: 'Borrar coche', coche: results.coche, coches_concesionarios: results.coches_concesionarios, todos_concesionarios: results.todos_concesionarios });
     });
 
 };

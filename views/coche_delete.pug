@@ -18,7 +18,10 @@ block content
 
   div(style='margin-left:20px;margin-top:20px')
 
-  p
-    a(href=coche.url+'/delete') Delete Coche
-  p
-    a(href=coche.url+'/update') Update Coche
+    p ¿Seguro que quieres eliminar el coche?
+    
+    form(method='POST' action='')
+      div.form-group
+        input#id.form-control(type='hidden',name='id', required='true', value=coche._id )
+
+      button.btn.btn-primary(type='submit') Delete

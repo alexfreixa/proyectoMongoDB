@@ -171,9 +171,9 @@ exports.concesionario_update_get = function (req, res, next) {
 exports.concesionario_update_post = [
 
     // Validate fields.
-    body('nombre_concesionario').isLength({ min: 1 }).trim().withMessage('Nombre must be specified to update.'),
-    body('marca_concesionario').isLength({ min: 1 }).trim().withMessage('Marca must be specified to update.'),
-    body('localizacion_concesionario').isLength({ min: 1 }).trim().withMessage('localizacion must be specified to update.'),
+    body('nombre_concesionario').isLength({ min: 1 }).trim().withMessage('No has escrito el nombre del concesionario.'),
+    body('marca_concesionario').isLength({ min: 1 }).trim().withMessage('No has escrito la marca.'),
+    body('localizacion_concesionario').isLength({ min: 1 }).trim().withMessage('No has escrito la localizacion del concesionario.'),
     body('fecha_apertura_concesionario', 'Invalid fecha de apertura.').isLength({ min: 1 }).trim(),
 
     // Sanitize fields.

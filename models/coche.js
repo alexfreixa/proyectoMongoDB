@@ -50,14 +50,7 @@ CocheSchema
 .get(function () {
   return this.precio_venta;
 });
-
-
-
-CocheSchema
-.virtual('url')
-.get(function () {
-  return '/catalog/coche/' + this._id;
-});
 */
+
 //Export model
 module.exports = mongoose.model('Coche', CocheSchema);

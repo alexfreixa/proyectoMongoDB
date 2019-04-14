@@ -101,17 +101,6 @@ exports.coche_create_get = function (req, res, next) {
 // Handle Coche create on POST.
 exports.coche_create_post = [
 
-// Convertir Clientes en una Array.
-    (req, res, next) => {
-        if(!(req.body.cliente instanceof Array)){
-            if(typeof req.body.cliente==='undefined')
-            req.body.cliente=[];
-            else
-            req.body.cliente=new Array(req.body.cliente);
-        }
-        next();
-    },
-
     // Validar campos.
     body('marca').isLength({ min: 1 }).trim(),
 
@@ -128,7 +117,6 @@ exports.coche_create_post = [
     sanitizeBody('color').escape(),
     sanitizeBody('precio_venta').toInt(),
 
-    //sanitizeBody('cliente.*').escape(),
 
     // Proceso despues de la validación y la "sanilizacion".
     (req, res, next) => {
@@ -144,21 +132,17 @@ exports.coche_create_post = [
                 fecha_de_fabricacion: req.body.fecha_de_fabricacion,
                 color: req.body.color,
                 precio_venta: req.body.precio_venta
-                //cliente: req.body.nombre
             }
         );
 
         if (!errors.isEmpty()) {
             // Hay errores. 
 
-            // Conseguir todos los concesionarios y clientes para elformulario.
+            // Conseguir todos los concesionarios y clientes para el formulario.
             async.parallel({
                 concesionarios: function(callback) {
                     Concesionario.find(callback);
                 },
-                /*clientes: function(callback) {
-                    Cliente.find(callback);
-                },*/
             }, function(err, results) {
                 if (err) { return next(err); }
 
@@ -281,16 +265,6 @@ exports.coche_update_get = function (req, res, next) {
 // Handle Coche update on POST.
 exports.coche_update_post = [
 
-// Convertimos los clientes en una array.
-    (req, res, next) => {
-        if(!(req.body.cliente instanceof Array)){
-            if(typeof req.body.cliente==='undefined')
-            req.body.cliente=[];
-            else
-            req.body.cliente=new Array(req.body.cliente);
-        }
-        next();
-    },
 
     // Validate fields.
     body('marca').isLength({ min: 1 }).trim().withMessage('El nombre de la marca es obligatorio')
@@ -299,18 +273,18 @@ exports.coche_update_post = [
     body('modelo').isLength({ min: 1 }).trim().withMessage('El nombre del modelo es obligatorio')
         .isAlphanumeric().withMessage('El nombre del modelo tiene que tener nombres alphanumericos.'),
 
+    body('color', 'No has escrito el color').isLength({ min: 1 }).trim(),
     body('fecha_de_fabricacion', 'Fecha de fabricación invalida').optional({ checkFalsy: true }).isISO8601(),
-    body('color', 'No as escrito color').optional({ checkFalsy: true }).isISO8601(),
+    
     body('precio_venta', 'No has escrito el precio de venta').optional({ checkFalsy: true }).isISO8601(),
 
     // Sanitize fields.
     sanitizeBody('marca').escape(),
     sanitizeBody('modelo').escape(),
-    sanitizeBody('fecha_de_fabricacion').toDate(),
     sanitizeBody('color').escape(),
-    sanitizeBody('precio_venta').toInt(),
+    sanitizeBody('fecha_de_fabricacion').escape(),
+    sanitizeBody('precio_venta').escape(),
 
-    //sanitizeBody('cliente.*').escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -325,30 +299,23 @@ exports.coche_update_post = [
                 modelo: req.body.modelo,
                 fecha_de_fabricacion: req.body.fecha_de_fabricacion,
                 color: req.body.color,
-                precio_venta: req.body.precio_venta
-                /*cliente: (typeof req.body.cliente==='undefined') ? [] : req.body.cliente,
-                _id:req.params.id // Se requiere este campo o si no se pondra otra id de cliente*/
+                precio_venta: req.body.precio_venta,
+                _id:req.params.id
             }
         );
 
         if (!errors.isEmpty()) {
             // Hay errores. Renderiza el formulario nuevamente con valores vacios y un mensaje de error.
 
-            /*res.render('coche_form', { title: 'Actualizar Coche', coche: coche, errors: errors.array() });
-            return;*/
-
             // Conseguimos todos los concesioarios y clientes del formulario
             async.parallel({
                 concesionarios: function(callback) {
                     Concesionario.find(callback);
                 },
-                /*clientes: function(callback) {
-                    Cliente.find(callback);
-                },*/
             }, function(err, results) {
                 if (err) { return next(err); }
 
-                res.render('coche_form', { title: 'Actualizar Coche', concesionarios:results.concesionarios, /*clientes:results.clientes,*/ coche: coche, errors: errors.array() });
+                res.render('coche_form', { title: 'Actualizar Coche', concesionarios:results.concesionarios, coche: coche, errors: errors.array() });
             });
             return;
         
